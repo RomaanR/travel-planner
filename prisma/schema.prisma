@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  trips     Trip[]
+}
+
+model Trip {
+  id                   String         @id @default(cuid())
+  userId               String?
+  user                 User?          @relation(fields: [userId], references: [id])
+  destination          String
+  destinationLat       Float?
+  destinationLng       Float?
+  accommodation        String
+  accommodationAddress String?
+  startDate            DateTime
+  endDate              DateTime
+  groupType            String
+  groupSize            Int            @default(1)
+  pace                 String
+  budget               String
+  preferences          String
+  dietaryNeeds         String?
+  additionalNotes      String?
+  status               String         @default("draft")
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  itineraryDays        ItineraryDay[]
+}
+
+model ItineraryDay {
+  id         String     @id @default(cuid())
+  tripId     String
+  trip       Trip       @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  dayNumber  Int
+  date       DateTime
+  theme      String?
+  createdAt  DateTime   @default(now())
+  activities Activity[]
+
+  @@unique([tripId, dayNumber])
+}
+
+model Activity {
+  id               String       @id @default(cuid())
+  dayId            String
+  day              ItineraryDay @relation(fields: [dayId], references: [id], onDelete: Cascade)
+  sortOrder        Int
+  name             String
+  description      String
+  category         String
+  lat              Float
+  lng              Float
+  placeId          String?
+  startTime        String
+  endTime          String
+  duration         Int
+  costEstimate     Float?
+  costCurrency     String?
+  transitFromPrev  String?
+  transitDuration  Int?
+  walkFromPrev     String?
+  walkDuration     Int?
+  carFromPrev      String?
+  carDuration      Int?
+  carFareEstimate  Float?
+  carFareCurrency  String?
+  photoUrl         String?
+  rating           Float?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  @@index([dayId])
+}
