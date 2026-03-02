@@ -62,7 +62,22 @@ export async function POST(request: NextRequest) {
       jsonStr = jsonStr.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
     }
 
-    const alternatives: ClaudeActivity[] = JSON.parse(jsonStr);
+    // Clean common JSON issues from LLM output
+    jsonStr = jsonStr
+      .replace(/\/\/.*$/gm, "")
+      .replace(/,\s*([\]}])/g, "$1");
+
+    let alternatives: ClaudeActivity[];
+    try {
+      alternatives = JSON.parse(jsonStr);
+    } catch {
+      const match = jsonStr.match(/\[[\s\S]*\]/);
+      if (!match) throw new Error("Could not parse alternatives JSON");
+      const cleaned = match[0]
+        .replace(/\/\/.*$/gm, "")
+        .replace(/,\s*([\]}])/g, "$1");
+      alternatives = JSON.parse(cleaned);
+    }
 
     return NextResponse.json({ alternatives });
   } catch (error) {

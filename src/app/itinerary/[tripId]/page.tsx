@@ -279,7 +279,7 @@ export default function ItineraryPage() {
 
         {/* Timeline - shown on desktop, toggled on mobile */}
         <div
-          className={`flex-1 min-w-0 overflow-hidden ${
+          className={`flex-1 min-w-0 overflow-hidden pt-10 md:pt-0 ${
             mobileView !== "timeline" ? "hidden lg:block" : ""
           }`}
         >
@@ -304,7 +304,7 @@ export default function ItineraryPage() {
 
         {/* Map - shown on desktop, toggled on mobile */}
         <div
-          className={`w-full lg:w-[400px] xl:w-[500px] shrink-0 border-l overflow-hidden ${
+          className={`w-full lg:w-[400px] xl:w-[500px] shrink-0 border-l overflow-hidden pt-10 md:pt-0 ${
             mobileView !== "map" ? "hidden lg:block" : ""
           }`}
         >
@@ -339,6 +339,20 @@ export default function ItineraryPage() {
         open={swapOpen}
         onClose={() => setSwapOpen(false)}
         onSwapComplete={() => {
+          // Clear cached places data for swapped activity so photo re-fetches
+          if (swapActivityId) {
+            setPlacesData((prev) => {
+              const next = { ...prev };
+              delete next[swapActivityId];
+              return next;
+            });
+          }
+          // Allow re-fetching places for this day
+          setFetchedDays((prev) => {
+            const next = new Set(prev);
+            next.delete(selectedDay);
+            return next;
+          });
           refetch();
           setSwapOpen(false);
         }}
