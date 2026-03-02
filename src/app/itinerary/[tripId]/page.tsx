@@ -279,7 +279,7 @@ export default function ItineraryPage() {
 
         {/* Timeline - shown on desktop, toggled on mobile */}
         <div
-          className={`flex-1 overflow-hidden ${
+          className={`flex-1 min-w-0 overflow-hidden ${
             mobileView !== "timeline" ? "hidden lg:block" : ""
           }`}
         >
