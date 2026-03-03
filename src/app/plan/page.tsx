@@ -25,11 +25,11 @@ export default function PlanPage() {
   const StepComponent = STEPS[currentStep];
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] font-serif text-[#1A1A1A] flex flex-col">
+    <div className="min-h-screen bg-[#FAF9F6] font-serif text-[#FAF7F2] flex flex-col">
       {/* MINIMALIST HEADER */}
       <header className="border-b border-gray-200 bg-white/50 backdrop-blur-md sticky top-0 z-50">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
-          <Link href="/" className="text-xl font-bold tracking-tighter italic hover:text-orange-800 transition-colors">
+          <Link href="/" className="text-xl font-bold tracking-tighter italic hover:bg-orange-950 transition-colors">
             TripCraft
           </Link>
           <div className="flex items-center gap-4">
