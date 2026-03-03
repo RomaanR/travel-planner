@@ -6,9 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import type { TripActivity } from "@/hooks/useTrip";
 
 interface ActivityDetailProps {
@@ -30,87 +28,58 @@ export function ActivityDetail({
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>{activity.name}</DialogTitle>
-        </DialogHeader>
+      {/* Applied rounded-none to remove standard shadcn UI rounded corners */}
+      <DialogContent className="max-w-xl rounded-none border border-gray-200 bg-[#FDFCFB] p-0 shadow-2xl overflow-hidden">
+        
+        <div className="p-8 md:p-10">
+          <DialogHeader className="mb-6">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="border border-gray-200 px-3 py-1 text-[9px] uppercase tracking-widest text-gray-500 font-bold bg-[#FAF7F2]">
+                {activity.category}
+              </span>
+              <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-400">
+                {activity.startTime} — {activity.endTime} ({activity.duration} min)
+              </span>
+            </div>
+            <DialogTitle className="text-3xl font-serif italic tracking-tight text-[#1A1A1A]">
+              {activity.name}
+            </DialogTitle>
+          </DialogHeader>
 
-        <div className="space-y-5">
-          <div className="flex items-center gap-2">
-            <Badge variant="secondary" className="rounded-full">{activity.category}</Badge>
-            <span className="text-sm text-muted-foreground">
-              {activity.startTime} - {activity.endTime}
-            </span>
-            <span className="text-sm text-muted-foreground">
-              ({activity.duration} min)
-            </span>
-          </div>
+          <div className="space-y-8">
+            <p className="text-base text-gray-600 leading-relaxed font-serif">
+              {activity.description}
+            </p>
 
-          <p className="text-sm text-muted-foreground">
-            {activity.description}
-          </p>
+            <div className="grid grid-cols-2 gap-6 border-y border-gray-200 py-6">
+              {activity.costEstimate != null && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-400 mb-1">Investment</p>
+                  <p className="text-sm font-medium">
+                    ~{activity.costEstimate} {activity.costCurrency} per person
+                  </p>
+                </div>
+              )}
+              {activity.transitFromPrev && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-400 mb-1">Transit Details</p>
+                  <p className="text-sm font-medium">
+                    {activity.transitFromPrev}
+                  </p>
+                </div>
+              )}
+            </div>
 
-          <Separator />
-
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            {activity.costEstimate != null && (
-              <div>
-                <p className="font-medium">Estimated cost</p>
-                <p className="text-muted-foreground">
-                  ~{activity.costEstimate} {activity.costCurrency} per person
-                </p>
-              </div>
-            )}
-            {activity.transitFromPrev && (
-              <div>
-                <p className="font-medium">Getting there</p>
-                <p className="text-muted-foreground">
-                  {activity.transitFromPrev}
-                </p>
-              </div>
-            )}
-          </div>
-
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" asChild className="flex-1">
-              <a href={mapsUrl} target="_blank" rel="noopener noreferrer">
-                <svg
-                  className="mr-2 h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
-                  />
-                </svg>
-                Open in Maps
-              </a>
-            </Button>
-            <Button variant="outline" size="sm" onClick={onSwap} className="flex-1">
-              <svg
-                className="mr-2 h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"
-                />
-              </svg>
-              Swap Activity
-            </Button>
+            <div className="flex gap-4 pt-2">
+              <Button variant="outline" size="sm" asChild className="flex-1 rounded-none h-14 border-gray-300 text-[10px] tracking-[0.2em] uppercase font-bold hover:bg-gray-50">
+                <a href={mapsUrl} target="_blank" rel="noopener noreferrer">
+                  Open Coordinates
+                </a>
+              </Button>
+              <Button size="sm" onClick={onSwap} className="flex-1 rounded-none h-14 bg-[#1A1A1A] text-white hover:bg-orange-950 text-[10px] tracking-[0.2em] uppercase font-bold transition-all">
+                Request Alternate
+              </Button>
+            </div>
           </div>
         </div>
       </DialogContent>

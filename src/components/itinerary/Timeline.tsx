@@ -25,18 +25,23 @@ export function Timeline({
 }: TimelineProps) {
   if (activities.length === 0) {
     return (
-      <div className="flex h-full items-center justify-center text-muted-foreground">
-        No activities for this day
+      <div className="flex h-full items-center justify-center text-[10px] uppercase tracking-[0.3em] text-gray-400 font-bold">
+        No curated activities for this day
       </div>
     );
   }
 
   return (
     <ScrollArea className="h-full">
-      <div className="p-4">
+      <div className="p-8 md:p-12">
         {dayTheme && (
-          <div className="mb-4">
-            <h3 className="text-xl font-bold tracking-tight">{dayTheme}</h3>
+          <div className="mb-12 border-b border-gray-200 pb-8">
+            <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-orange-800 mb-3 block">
+              Curated Focus
+            </span>
+            <h3 className="text-3xl md:text-4xl font-serif italic tracking-tight text-[#1A1A1A]">
+              {dayTheme}
+            </h3>
           </div>
         )}
         <div className="space-y-0">

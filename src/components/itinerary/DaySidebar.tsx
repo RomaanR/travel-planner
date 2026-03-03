@@ -16,39 +16,28 @@ export function DaySidebar({
   onSelectDay,
 }: DaySidebarProps) {
   return (
-    <ScrollArea className="h-full bg-muted/30">
-      <div className="space-y-1 p-2">
+    <ScrollArea className="h-full bg-[#FAF7F2]/30">
+      <div className="flex flex-col">
         {days.map((day) => (
           <button
             key={day.id}
             onClick={() => onSelectDay(day.dayNumber)}
-            className={`w-full rounded-xl p-3 text-left transition-all duration-200 hover:bg-accent ${
+            className={`group w-full p-6 text-left border-b border-gray-200 transition-all duration-300 ${
               selectedDay === day.dayNumber
-                ? "bg-primary/5 shadow-apple-sm border-l-2 border-primary"
-                : ""
+                ? "bg-white border-r-2 border-r-[#1A1A1A]"
+                : "hover:bg-white"
             }`}
           >
-            <div className="flex items-center gap-2">
-              <div
-                className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold transition-all duration-200 ${
-                  selectedDay === day.dayNumber
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground"
-                }`}
-              >
-                {day.dayNumber}
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold truncate">
-                  Day {day.dayNumber}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {format(new Date(day.date), "MMM d")}
-                </p>
-              </div>
+            <div className="flex flex-col gap-1">
+              <span className={`text-[10px] uppercase tracking-[0.3em] font-bold ${selectedDay === day.dayNumber ? "text-[#1A1A1A]" : "text-gray-400 group-hover:text-gray-600"}`}>
+                Day {day.dayNumber.toString().padStart(2, '0')}
+              </span>
+              <span className={`font-serif italic ${selectedDay === day.dayNumber ? "text-xl text-[#1A1A1A]" : "text-lg text-gray-400"}`}>
+                {format(new Date(day.date), "MMM d")}
+              </span>
             </div>
             {day.theme && (
-              <p className="mt-1 text-xs text-muted-foreground italic truncate pl-10">
+              <p className={`mt-3 text-xs leading-relaxed italic ${selectedDay === day.dayNumber ? "text-gray-600" : "text-gray-400"}`}>
                 {day.theme}
               </p>
             )}
