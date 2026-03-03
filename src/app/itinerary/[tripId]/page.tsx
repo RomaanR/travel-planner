@@ -20,9 +20,7 @@ export default function ItineraryPage() {
   const { trip, loading, error, refetch } = useTrip(tripId);
 
   const [selectedDay, setSelectedDay] = useState(1);
-  const [selectedActivityId, setSelectedActivityId] = useState<string | null>(
-    null
-  );
+  const [selectedActivityId, setSelectedActivityId] = useState<string | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
   const [swapActivityId, setSwapActivityId] = useState<string | null>(null);
   const [swapActivityName, setSwapActivityName] = useState("");
@@ -45,12 +43,7 @@ export default function ItineraryPage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            activities: activities.map((a) => ({
-              id: a.id,
-              name: a.name,
-              lat: a.lat,
-              lng: a.lng,
-            })),
+            activities: activities.map((a) => ({ id: a.id, name: a.name, lat: a.lat, lng: a.lng })),
           }),
         });
 
@@ -75,37 +68,24 @@ export default function ItineraryPage() {
     [fetchedDays]
   );
 
-  // Fetch places data when day changes and trip is ready
   useEffect(() => {
     if (trip?.status === "ready" && trip.itineraryDays) {
-      const currentDayData = trip.itineraryDays.find(
-        (d) => d.dayNumber === selectedDay
-      );
+      const currentDayData = trip.itineraryDays.find((d) => d.dayNumber === selectedDay);
       if (currentDayData?.activities) {
         fetchPlacesData(currentDayData.activities, selectedDay);
       }
     }
   }, [trip, selectedDay, fetchPlacesData]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <LoadingScreen />
-      </div>
-    );
-  }
+  if (loading) return <div className="min-h-screen bg-[#FDFCFB]"><LoadingScreen /></div>;
 
   if (error) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-destructive">
-            Something went wrong
-          </h2>
-          <p className="mt-2 text-muted-foreground">{error}</p>
-          <Button onClick={() => refetch()} className="mt-4">
-            Try Again
-          </Button>
+      <div className="flex min-h-screen items-center justify-center bg-[#FDFCFB] font-sans">
+        <div className="text-center p-8 border border-gray-200">
+          <h2 className="text-xl font-bold tracking-widest uppercase text-red-800 mb-2">System Error</h2>
+          <p className="text-sm text-gray-500 mb-6">{error}</p>
+          <Button onClick={() => refetch()} className="rounded-none bg-[#1A1A1A] text-white uppercase tracking-widest text-[10px]">Try Again</Button>
         </div>
       </div>
     );
@@ -114,33 +94,21 @@ export default function ItineraryPage() {
   if (!trip) return null;
 
   if (trip.status === "generating" || trip.status === "draft") {
-    return (
-      <div className="min-h-screen bg-background">
-        <LoadingScreen destination={trip.destination} />
-      </div>
-    );
+    return <div className="min-h-screen bg-[#FDFCFB]"><LoadingScreen destination={trip.destination} /></div>;
   }
 
   if (trip.status === "error") {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-destructive">
-            Generation failed
-          </h2>
-          <p className="mt-2 text-muted-foreground">
-            We could not generate an itinerary. Please try again.
-          </p>
+      <div className="flex min-h-screen items-center justify-center bg-[#FDFCFB] font-sans">
+        <div className="text-center p-8 border border-gray-200">
+          <h2 className="text-xl font-bold tracking-widest uppercase text-red-800 mb-2">Generation Failed</h2>
+          <p className="text-sm text-gray-500 mb-6">We could not architect your itinerary. Please try again.</p>
           <Button
             onClick={async () => {
-              await fetch("/api/generate", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ tripId }),
-              });
+              await fetch("/api/generate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tripId }) });
               refetch();
             }}
-            className="mt-4"
+            className="rounded-none bg-[#1A1A1A] text-white uppercase tracking-widest text-[10px]"
           >
             Retry Generation
           </Button>
@@ -152,10 +120,7 @@ export default function ItineraryPage() {
   const days = trip.itineraryDays;
   const currentDay = days.find((d) => d.dayNumber === selectedDay);
   const currentActivities = currentDay?.activities || [];
-
-  const selectedActivity = currentActivities.find(
-    (a) => a.id === selectedActivityId
-  );
+  const selectedActivity = currentActivities.find((a) => a.id === selectedActivityId);
 
   const handleSwapActivity = (activityId: string) => {
     const act = currentActivities.find((a) => a.id === activityId);
@@ -166,109 +131,75 @@ export default function ItineraryPage() {
     }
   };
 
-  const handleExport = () => {
-    window.open(`/api/export?tripId=${tripId}`, "_blank");
-  };
+  const handleExport = () => { window.open(`/api/export?tripId=${tripId}`, "_blank"); };
 
   return (
-    <div className="flex h-screen flex-col bg-background">
-      {/* Header */}
-      <header className="glass shrink-0 sticky top-0 z-50">
-        <div className="flex h-14 items-center justify-between px-4">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-2">
-              <svg
-                className="h-6 w-6 text-primary"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"
-                />
-              </svg>
-              <span className="font-bold hidden sm:inline">TripCraft</span>
+    <div className="flex h-screen flex-col bg-[#FDFCFB] text-[#1A1A1A] font-sans">
+      {/* SHARP EDITORIAL HEADER */}
+      <header className="shrink-0 sticky top-0 z-50 bg-[#FDFCFB] border-b border-gray-200">
+        <div className="flex h-16 items-center justify-between px-6 max-w-[1600px] mx-auto">
+          <div className="flex items-center gap-6">
+            <Link href="/" className="text-2xl font-bold tracking-tighter italic font-serif hover:text-orange-800 transition-colors">
+              TripCraft
             </Link>
-            <div className="h-6 w-px bg-border" />
-            <div>
-              <h1 className="text-sm font-semibold leading-tight">
+            <div className="h-8 w-px bg-gray-200 hidden md:block" />
+            <div className="hidden md:block">
+              <h1 className="text-xl font-serif italic leading-tight tracking-tight">
                 {trip.destination}
               </h1>
-              <p className="text-xs text-muted-foreground">
-                {format(new Date(trip.startDate), "MMM d")} -{" "}
-                {format(new Date(trip.endDate), "MMM d, yyyy")}
+              <p className="text-[9px] uppercase tracking-[0.2em] text-gray-500 font-bold mt-1">
+                {format(new Date(trip.startDate), "MMM d")} — {format(new Date(trip.endDate), "MMM d, yyyy")}
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            {/* Mobile view toggle — Apple segmented control */}
-            <div className="flex lg:hidden rounded-full bg-muted/80 p-0.5 backdrop-blur-sm">
+          <div className="flex items-center gap-4">
+            {/* Minimalist Mobile Toggle */}
+            <div className="flex lg:hidden border border-gray-200 p-1">
               <button
                 onClick={() => setMobileView("timeline")}
-                className={`rounded-full px-4 py-1.5 text-xs font-medium transition-all ${
-                  mobileView === "timeline"
-                    ? "bg-white shadow-apple-sm text-foreground"
-                    : "text-muted-foreground"
+                className={`px-4 py-2 text-[9px] uppercase tracking-widest font-bold transition-all ${
+                  mobileView === "timeline" ? "bg-[#1A1A1A] text-white" : "text-gray-400 hover:text-[#1A1A1A]"
                 }`}
               >
-                Timeline
+                Journal
               </button>
               <button
                 onClick={() => setMobileView("map")}
-                className={`rounded-full px-4 py-1.5 text-xs font-medium transition-all ${
-                  mobileView === "map"
-                    ? "bg-white shadow-apple-sm text-foreground"
-                    : "text-muted-foreground"
+                className={`px-4 py-2 text-[9px] uppercase tracking-widest font-bold transition-all ${
+                  mobileView === "map" ? "bg-[#1A1A1A] text-white" : "text-gray-400 hover:text-[#1A1A1A]"
                 }`}
               >
                 Map
               </button>
             </div>
-            <Button variant="outline" size="sm" className="rounded-full" onClick={handleExport}>
-              <svg
-                className="mr-1 h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
-                />
-              </svg>
-              <span className="hidden sm:inline">Export PDF</span>
+            
+            {/* Sharp Export Button */}
+            <Button variant="outline" className="rounded-none border-gray-300 uppercase text-[10px] tracking-widest px-6 hover:bg-[#1A1A1A] hover:text-white hover:border-[#1A1A1A] transition-all" onClick={handleExport}>
+              <span className="hidden sm:inline">Export Dossier</span>
+              <span className="sm:hidden">PDF</span>
             </Button>
           </div>
         </div>
       </header>
 
       {/* Main content */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Day sidebar - hidden on mobile */}
-        <aside className="hidden md:block w-48 border-r shrink-0 overflow-hidden">
-          <DaySidebar
-            days={days}
-            selectedDay={selectedDay}
-            onSelectDay={setSelectedDay}
-          />
+      <div className="flex flex-1 overflow-hidden max-w-[1600px] mx-auto w-full">
+        {/* Day sidebar */}
+        <aside className="hidden md:block w-48 border-r border-gray-200 shrink-0 overflow-hidden bg-[#FAF7F2]/50">
+          <DaySidebar days={days} selectedDay={selectedDay} onSelectDay={setSelectedDay} />
         </aside>
 
-        {/* Mobile day selector */}
-        <div className="md:hidden border-b shrink-0 absolute top-14 left-0 right-0 z-10 glass-subtle overflow-x-auto">
-          <div className="flex gap-1 p-2">
+        {/* Mobile day selector - Minimalist */}
+        <div className="md:hidden border-b border-gray-200 shrink-0 absolute top-16 left-0 right-0 z-10 bg-[#FDFCFB] overflow-x-auto">
+          <div className="flex gap-2 p-3">
             {days.map((day) => (
               <button
                 key={day.id}
                 onClick={() => setSelectedDay(day.dayNumber)}
-                className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-all ${
+                className={`shrink-0 px-4 py-2 text-[10px] uppercase tracking-widest font-bold border transition-all ${
                   selectedDay === day.dayNumber
-                    ? "bg-primary text-primary-foreground shadow-apple-sm"
-                    : "bg-muted"
+                    ? "border-[#1A1A1A] bg-[#1A1A1A] text-white"
+                    : "border-gray-200 text-gray-500 bg-white"
                 }`}
               >
                 Day {day.dayNumber}
@@ -277,86 +208,33 @@ export default function ItineraryPage() {
           </div>
         </div>
 
-        {/* Timeline - shown on desktop, toggled on mobile */}
-        <div
-          className={`flex-1 min-w-0 overflow-hidden pt-10 md:pt-0 ${
-            mobileView !== "timeline" ? "hidden lg:block" : ""
-          }`}
-        >
+        {/* Timeline */}
+        <div className={`flex-1 min-w-0 overflow-hidden pt-14 md:pt-0 relative bg-white ${mobileView !== "timeline" ? "hidden lg:block" : ""}`}>
           <Timeline
             activities={currentActivities}
             dayTheme={currentDay?.theme || null}
             selectedActivityId={selectedActivityId}
-            onSelectActivity={(id) => {
-              setSelectedActivityId(id);
-              setDetailOpen(true);
-            }}
+            onSelectActivity={(id) => { setSelectedActivityId(id); setDetailOpen(true); }}
             onSwapActivity={handleSwapActivity}
             placesData={placesData}
             photoBaseUrl={photoBaseUrl}
           />
           {placesLoading && (
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10 rounded-full bg-primary/90 text-primary-foreground px-3 py-1 text-xs shadow-lg">
-              Fetching live data from Google...
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 border border-gray-200 bg-white px-6 py-3 text-[9px] uppercase tracking-[0.2em] font-bold text-gray-500 shadow-2xl flex items-center gap-3">
+              <svg className="h-3 w-3 animate-spin text-orange-800" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
+              Cross-referencing Reality...
             </div>
           )}
         </div>
 
-        {/* Map - shown on desktop, toggled on mobile */}
-        <div
-          className={`w-full lg:w-[400px] xl:w-[500px] shrink-0 border-l overflow-hidden pt-10 md:pt-0 ${
-            mobileView !== "map" ? "hidden lg:block" : ""
-          }`}
-        >
-          <MapView
-            activities={currentActivities}
-            selectedActivityId={selectedActivityId}
-            onMarkerClick={(id) => {
-              setSelectedActivityId(id);
-              setDetailOpen(true);
-            }}
-          />
+        {/* Map */}
+        <div className={`w-full lg:w-[450px] xl:w-[550px] shrink-0 border-l border-gray-200 overflow-hidden pt-14 md:pt-0 ${mobileView !== "map" ? "hidden lg:block" : ""}`}>
+          <MapView activities={currentActivities} selectedActivityId={selectedActivityId} onMarkerClick={(id) => { setSelectedActivityId(id); setDetailOpen(true); }} />
         </div>
       </div>
 
-      {/* Activity Detail Dialog */}
-      <ActivityDetail
-        activity={selectedActivity || null}
-        open={detailOpen}
-        onClose={() => setDetailOpen(false)}
-        onSwap={() => {
-          setDetailOpen(false);
-          if (selectedActivityId) {
-            handleSwapActivity(selectedActivityId);
-          }
-        }}
-      />
-
-      {/* Swap Modal */}
-      <SwapModal
-        activityId={swapActivityId}
-        activityName={swapActivityName}
-        open={swapOpen}
-        onClose={() => setSwapOpen(false)}
-        onSwapComplete={() => {
-          // Clear cached places data for swapped activity so photo re-fetches
-          if (swapActivityId) {
-            setPlacesData((prev) => {
-              const next = { ...prev };
-              delete next[swapActivityId];
-              return next;
-            });
-          }
-          // Allow re-fetching places for this day
-          setFetchedDays((prev) => {
-            const next = new Set(prev);
-            next.delete(selectedDay);
-            return next;
-          });
-          refetch();
-          setSwapOpen(false);
-        }}
-      />
+      <ActivityDetail activity={selectedActivity || null} open={detailOpen} onClose={() => setDetailOpen(false)} onSwap={() => { setDetailOpen(false); if (selectedActivityId) { handleSwapActivity(selectedActivityId); } }} />
+      <SwapModal activityId={swapActivityId} activityName={swapActivityName} open={swapOpen} onClose={() => setSwapOpen(false)} onSwapComplete={() => { if (swapActivityId) { setPlacesData((prev) => { const next = { ...prev }; delete next[swapActivityId]; return next; }); } setFetchedDays((prev) => { const next = new Set(prev); next.delete(selectedDay); return next; }); refetch(); setSwapOpen(false); }} />
     </div>
   );
 }
