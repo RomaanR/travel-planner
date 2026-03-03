@@ -15,33 +15,22 @@ const GROUP_TYPES = [
 ] as const;
 
 export function StepTravelGroup() {
-  const { formData, updateFormData, nextStep, prevStep } =
-    useOnboardingStore();
+  const { formData, updateFormData, nextStep, prevStep } = useOnboardingStore();
   const [groupType, setGroupType] = useState(formData.groupType || "");
   const [groupSize, setGroupSize] = useState(formData.groupSize || 1);
   const [error, setError] = useState("");
 
   const handleSubmit = () => {
-    if (!groupType) {
-      setError("Please select a group type");
-      return;
-    }
-    updateFormData({
-      groupType: groupType as "solo" | "couple" | "family" | "friends" | "business",
-      groupSize: groupType === "solo" ? 1 : groupSize,
-    });
+    if (!groupType) { setError("Please select a group type"); return; }
+    updateFormData({ groupType: groupType as "solo" | "couple" | "family" | "friends" | "business", groupSize: groupType === "solo" ? 1 : groupSize });
     nextStep();
   };
 
   return (
     <div className="space-y-8">
       <div className="text-center">
-        <h2 className="text-3xl font-bold tracking-tight">
-          Who is traveling?
-        </h2>
-        <p className="mt-3 text-lg text-muted-foreground">
-          Tell us about your travel group
-        </p>
+        <h2 className="text-3xl font-bold tracking-tight">Who is traveling?</h2>
+        <p className="mt-3 text-lg text-muted-foreground italic font-sans">Tell us about your party</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -49,66 +38,33 @@ export function StepTravelGroup() {
           <button
             key={type.value}
             type="button"
-            onClick={() => {
-              setGroupType(type.value);
-              setError("");
-              if (type.value === "solo") setGroupSize(1);
-              if (type.value === "couple") setGroupSize(2);
-            }}
-            className={`flex flex-col items-center gap-2 rounded-2xl border-2 p-5 transition-all duration-200 hover:border-primary/40 hover:shadow-apple hover:scale-[1.02] active:scale-[0.98] ${
+            onClick={() => { setGroupType(type.value); setError(""); if (type.value === "solo") setGroupSize(1); if (type.value === "couple") setGroupSize(2); }}
+            className={`flex flex-col items-center justify-center gap-3 rounded-none border p-6 transition-all duration-300 ${
               groupType === type.value
-                ? "border-primary bg-primary/5 shadow-apple"
-                : "border-border"
+                ? "border-[#1A1A1A] bg-[#FAF7F2] text-[#1A1A1A]"
+                : "border-gray-200 text-gray-400 hover:border-gray-400 hover:text-gray-800"
             }`}
           >
-            <svg
-              className="h-8 w-8"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d={type.icon}
-              />
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d={type.icon} />
             </svg>
-            <span className="text-sm font-medium">{type.label}</span>
+            <span className="text-[10px] uppercase tracking-widest font-bold font-sans">{type.label}</span>
           </button>
         ))}
       </div>
 
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {error && <p className="text-sm text-red-800">{error}</p>}
 
       {groupType && groupType !== "solo" && (
-        <div className="space-y-2">
-          <Label htmlFor="group-size">Number of travelers</Label>
-          <Input
-            id="group-size"
-            type="number"
-            min={2}
-            max={20}
-            value={groupSize}
-            onChange={(e) => setGroupSize(parseInt(e.target.value) || 2)}
-          />
+        <div className="space-y-2 border border-gray-200 p-6 bg-white">
+          <Label htmlFor="group-size" className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Number of travelers</Label>
+          <Input id="group-size" type="number" min={2} max={20} value={groupSize} onChange={(e) => setGroupSize(parseInt(e.target.value) || 2)} className="h-12 rounded-none border-gray-300 focus-visible:ring-1 focus-visible:ring-orange-800 shadow-none font-sans" />
         </div>
       )}
 
-      <div className="flex gap-3">
-        <Button
-          variant="outline"
-          onClick={prevStep}
-          className="flex-1 h-12 text-base"
-        >
-          Back
-        </Button>
-        <Button
-          onClick={handleSubmit}
-          className="flex-1 h-12 text-base font-semibold shadow-apple-sm hover:shadow-apple"
-        >
-          Next
-        </Button>
+      <div className="flex gap-4 pt-4">
+        <Button variant="outline" onClick={prevStep} className="flex-1 h-14 rounded-none border-gray-300 text-[11px] tracking-[0.2em] uppercase font-bold hover:bg-gray-50 transition-all">Back</Button>
+        <Button onClick={handleSubmit} className="flex-1 h-14 bg-[#1A1A1A] text-white rounded-none hover:bg-orange-950 transition-all text-[11px] tracking-[0.2em] uppercase font-bold">Next</Button>
       </div>
     </div>
   );
