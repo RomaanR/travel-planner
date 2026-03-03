@@ -36,21 +36,21 @@ export function StepDestination() {
         <h2 className="text-3xl font-bold tracking-tight">
           Where are you going?
         </h2>
-        <p className="mt-3 text-lg text-muted-foreground">
+        <p className="mt-3 text-lg text-muted-foreground italic font-sans">
           Enter a city, region, or country
         </p>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="destination">Destination</Label>
+        <Label htmlFor="destination" className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Destination</Label>
         <Input
           id="destination"
           placeholder="e.g., Paris, France"
-          className="h-14 text-lg rounded-xl shadow-apple-sm focus:shadow-apple"
+          className="h-14 text-lg rounded-none border-gray-300 focus-visible:ring-1 focus-visible:ring-orange-800 shadow-none"
           {...register("destination")}
         />
         {errors.destination && (
-          <p className="text-sm text-destructive">
+          <p className="text-sm text-red-800">
             {errors.destination.message}
           </p>
         )}
@@ -58,8 +58,7 @@ export function StepDestination() {
 
       <Button
         type="submit"
-        className="w-full h-12 text-base font-semibold shadow-apple-sm hover:shadow-apple"
-        size="lg"
+        className="w-full h-14 bg-[#1A1A1A] text-white rounded-none hover:bg-orange-950 transition-all text-[11px] tracking-[0.2em] uppercase font-bold"
       >
         Next
       </Button>
