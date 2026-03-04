@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KleenPark — Analytics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════════ -->
+  <header class="header">
+    <div class="header-brand">
+      <img src="kleenpark-logo.png" alt="KleenPark" class="logo">
+      <div class="brand-text">
+        <span class="brand-sub" style="margin-top:0">Analytics &amp; Trends</span>
+      </div>
+    </div>
+
+    <nav class="header-nav">
+      <a href="index.html"     class="nav-link">Overview</a>
+      <a href="analytics.html" class="nav-link active">Analytics</a>
+    </nav>
+
+    <div class="header-status">
+      <div class="live-badge">
+        <span class="live-dot"></span>
+        <span class="live-text">LIVE</span>
+      </div>
+      <div class="refresh-info">
+        <span id="last-updated">Connecting…</span>
+        <span class="refresh-label">Refreshes in <span id="countdown">30</span>s</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════
+       FILTER BAR
+  ══════════════════════════════════════════ -->
+  <div class="filter-bar">
+    <div class="filter-group">
+      <button class="filter-btn" data-range="today" onclick="setRange('today')">Today</button>
+      <button class="filter-btn active" data-range="week"  onclick="setRange('week')">This Week</button>
+      <button class="filter-btn" data-range="month" onclick="setRange('month')">This Month</button>
+      <button class="filter-btn" data-range="all"   onclick="setRange('all')">All Time</button>
+    </div>
+    <div class="filter-date" id="filter-date-display">—</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       CHARTS
+  ══════════════════════════════════════════ -->
+  <main class="charts-main">
+
+    <!-- Row 1: Booking Trend (full width) -->
+    <div class="chart-full">
+      <div class="chart-title">Booking Activity Over Time</div>
+      <div class="chart-wrap" style="height:220px">
+        <canvas id="chart-trend"></canvas>
+      </div>
+    </div>
+
+    <!-- Row 2: Category Split + Top Services -->
+    <div class="chart-row">
+      <div class="chart-card">
+        <div class="chart-title">Service Category Split</div>
+        <div class="chart-wrap" style="height:240px; display:flex; align-items:center; justify-content:center;">
+          <canvas id="chart-category" style="max-width:240px; max-height:240px"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Top Services</div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="chart-services"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3: Action Breakdown + Day of Week -->
+    <div class="chart-row">
+      <div class="chart-card">
+        <div class="chart-title">Action Breakdown</div>
+        <div class="chart-wrap" style="height:240px; display:flex; align-items:center; justify-content:center;">
+          <canvas id="chart-actions" style="max-width:240px; max-height:240px"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Bookings by Day of Week</div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="chart-dow"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 4: Call Performance -->
+    <div class="chart-full">
+      <div class="chart-title">Call Success Rate Over Time</div>
+      <div class="chart-wrap" style="height:220px">
+        <canvas id="chart-success-trend"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-row">
+      <div class="chart-card">
+        <div class="chart-title">Call Outcomes</div>
+        <div class="chart-wrap" style="height:240px; display:flex; align-items:center; justify-content:center;">
+          <canvas id="chart-outcomes" style="max-width:240px; max-height:240px"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Avg Call Duration by Day</div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="chart-call-dur"></canvas>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════ -->
+  <footer class="footer">
+    <span>© KleenPark Auto Detailing</span>
+    <span id="footer-updated">Last updated: —</span>
+    <span>Auto-refreshes every 30 seconds</span>
+  </footer>
+
+  <!-- ══════════════════════════════════════════
+       ERROR OVERLAY
+  ══════════════════════════════════════════ -->
+  <div id="error-overlay" class="error-overlay hidden">
+    <div class="error-box">
+      <div class="error-icon">⚠</div>
+      <h3>Connection Error</h3>
+      <p id="error-message">Unable to connect to Google Sheets.</p>
+      <p class="error-hint">
+        Make sure the sheet is shared as <code>Anyone with the link</code>,
+        then open this dashboard via a local server (run <code>start.bat</code>).
+      </p>
+      <button class="error-btn" onclick="retryLoad()">Retry</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCRIPTS
+  ══════════════════════════════════════════ -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="config.js"></script>
+  <script src="data.js"></script>
+  <script src="analytics.js"></script>
+
+</body>
+</html>

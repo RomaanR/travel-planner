@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KleenPark — Operations Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════════ -->
+  <header class="header">
+    <div class="header-brand">
+      <img src="kleenpark-logo.png" alt="KleenPark" class="logo">
+      <div class="brand-text">
+        <span class="brand-sub" style="margin-top:0">Operations Dashboard</span>
+      </div>
+    </div>
+
+    <nav class="header-nav">
+      <a href="index.html"     class="nav-link active">Overview</a>
+      <a href="analytics.html" class="nav-link">Analytics</a>
+    </nav>
+
+    <div class="header-status">
+      <div class="live-badge">
+        <span class="live-dot"></span>
+        <span class="live-text">LIVE</span>
+      </div>
+      <div class="refresh-info">
+        <span id="last-updated">Connecting…</span>
+        <span class="refresh-label">Refreshes in <span id="countdown">30</span>s</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════
+       FILTER BAR
+  ══════════════════════════════════════════ -->
+  <div class="filter-bar">
+    <div class="filter-group">
+      <button class="filter-btn" data-range="today" onclick="setRange('today')">Today</button>
+      <button class="filter-btn active" data-range="week"  onclick="setRange('week')">This Week</button>
+      <button class="filter-btn" data-range="month" onclick="setRange('month')">This Month</button>
+      <button class="filter-btn" data-range="all"   onclick="setRange('all')">All Time</button>
+    </div>
+    <div class="filter-date" id="filter-date-display">—</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       MAIN CONTENT
+  ══════════════════════════════════════════ -->
+  <main class="main">
+
+    <!-- ── KPI CARDS ── -->
+    <section class="kpi-grid">
+
+      <div class="kpi-card kpi-blue">
+        <div class="kpi-top">
+          <span class="kpi-label">Total Bookings</span>
+          <span class="kpi-icon">📅</span>
+        </div>
+        <div class="kpi-value" id="kpi-bookings">—</div>
+        <div class="kpi-detail" id="det-bookings">Loading…</div>
+      </div>
+
+      <div class="kpi-card kpi-red">
+        <div class="kpi-top">
+          <span class="kpi-label">Cancellations</span>
+          <span class="kpi-icon">✕</span>
+        </div>
+        <div class="kpi-value" id="kpi-cancellations">—</div>
+        <div class="kpi-detail" id="det-cancellations">Loading…</div>
+      </div>
+
+      <div class="kpi-card kpi-orange">
+        <div class="kpi-top">
+          <span class="kpi-label">Reschedules</span>
+          <span class="kpi-icon">↺</span>
+        </div>
+        <div class="kpi-value" id="kpi-reschedules">—</div>
+        <div class="kpi-detail" id="det-reschedules">Loading…</div>
+      </div>
+
+      <div class="kpi-card kpi-purple">
+        <div class="kpi-top">
+          <span class="kpi-label">Customers</span>
+          <span class="kpi-icon">◎</span>
+        </div>
+        <div class="kpi-value" id="kpi-customers">—</div>
+        <div class="kpi-detail" id="det-customers">Loading…</div>
+      </div>
+
+      <div class="kpi-card kpi-cyan">
+        <div class="kpi-top">
+          <span class="kpi-label">Quick Service</span>
+          <span class="kpi-icon">⚡</span>
+        </div>
+        <div class="kpi-value" id="kpi-quick">—</div>
+        <div class="kpi-detail" id="det-quick">Loading…</div>
+      </div>
+
+      <div class="kpi-card kpi-yellow">
+        <div class="kpi-top">
+          <span class="kpi-label">Premium Service</span>
+          <span class="kpi-icon">★</span>
+        </div>
+        <div class="kpi-value" id="kpi-premium">—</div>
+        <div class="kpi-detail" id="det-premium">Loading…</div>
+      </div>
+
+      <div class="kpi-card kpi-teal">
+        <div class="kpi-top">
+          <span class="kpi-label">Quote Requests</span>
+          <span class="kpi-icon">◈</span>
+        </div>
+        <div class="kpi-value" id="kpi-quotes">—</div>
+        <div class="kpi-detail" id="det-quotes">Loading…</div>
+      </div>
+
+      <div class="kpi-card kpi-green">
+        <div class="kpi-top">
+          <span class="kpi-label">Net Active</span>
+          <span class="kpi-icon">✓</span>
+        </div>
+        <div class="kpi-value" id="kpi-net">—</div>
+        <div class="kpi-detail" id="det-net">Loading…</div>
+      </div>
+
+    </section>
+
+    <!-- ── CALL PERFORMANCE ── -->
+    <section>
+      <div class="section-header">
+        <h2 class="section-title">Call Performance</h2>
+        <span class="section-badge" id="call-period">—</span>
+      </div>
+
+      <div class="call-perf-grid">
+
+        <div class="kpi-card kpi-indigo">
+          <div class="kpi-top">
+            <span class="kpi-label">Total Calls</span>
+            <span class="kpi-icon">📞</span>
+          </div>
+          <div class="kpi-value" id="kpi-calls">—</div>
+          <div class="kpi-detail" id="det-calls">Loading…</div>
+        </div>
+
+        <div class="kpi-card kpi-green">
+          <div class="kpi-top">
+            <span class="kpi-label">Success Rate</span>
+            <span class="kpi-icon">✓</span>
+          </div>
+          <div class="kpi-value" id="kpi-success-rate">—</div>
+          <div class="kpi-detail" id="det-success-rate">Loading…</div>
+        </div>
+
+        <div class="kpi-card kpi-blue">
+          <div class="kpi-top">
+            <span class="kpi-label">Avg Duration</span>
+            <span class="kpi-icon">⏱</span>
+          </div>
+          <div class="kpi-value" id="kpi-avg-dur">—</div>
+          <div class="kpi-detail" id="det-avg-dur">Loading…</div>
+        </div>
+
+        <div class="kpi-card kpi-red">
+          <div class="kpi-top">
+            <span class="kpi-label">Abandoned</span>
+            <span class="kpi-icon">✕</span>
+          </div>
+          <div class="kpi-value" id="kpi-abandoned">—</div>
+          <div class="kpi-detail" id="det-abandoned">Loading…</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── TODAY'S CAPACITY ── -->
+    <section>
+      <div class="section-header">
+        <h2 class="section-title">Today's Capacity</h2>
+        <span class="section-badge" id="capacity-date">—</span>
+      </div>
+
+      <div class="capacity-grid">
+
+        <div class="capacity-card">
+          <div class="cap-head">
+            <span class="cap-label">⚡ Quick Service</span>
+            <span class="cap-fraction">
+              <span id="q-booked">0</span> / <span id="q-cap">30</span> slots
+            </span>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-fill fill-quick" id="q-bar" style="width:0%"></div>
+          </div>
+          <div class="cap-foot">
+            <span class="cap-remaining" id="q-remaining">30 slots remaining</span>
+            <span class="cap-pct" id="q-pct">0%</span>
+          </div>
+        </div>
+
+        <div class="capacity-card">
+          <div class="cap-head">
+            <span class="cap-label">★ Premium Service</span>
+            <span class="cap-fraction">
+              <span id="p-booked">0</span> / <span id="p-cap">10</span> slots
+            </span>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-fill fill-premium" id="p-bar" style="width:0%"></div>
+          </div>
+          <div class="cap-foot">
+            <span class="cap-remaining" id="p-remaining">10 slots remaining</span>
+            <span class="cap-pct" id="p-pct">0%</span>
+          </div>
+        </div>
+
+        <div class="capacity-card">
+          <div class="cap-head">
+            <span class="cap-label">◎ Total Utilization</span>
+            <span class="cap-fraction">
+              <span id="t-booked">0</span> / 40 slots
+            </span>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-fill fill-total" id="t-bar" style="width:0%"></div>
+          </div>
+          <div class="cap-foot">
+            <span class="cap-remaining" id="t-remaining">40 slots remaining</span>
+            <span class="cap-pct" id="t-pct">0%</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── RECENT ACTIVITY ── -->
+    <section>
+      <div class="section-header">
+        <h2 class="section-title">Recent Activity</h2>
+        <span class="section-badge" id="activity-count">—</span>
+      </div>
+
+      <div class="activity-table-wrap">
+        <table class="activity-table">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Action</th>
+              <th>Customer</th>
+              <th>Service</th>
+              <th>Category</th>
+              <th>Location</th>
+              <th>Appointment</th>
+            </tr>
+          </thead>
+          <tbody id="activity-tbody">
+            <tr>
+              <td colspan="7">
+                <div class="spinner-wrap">
+                  <div class="spinner"></div> Loading data…
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════ -->
+  <footer class="footer">
+    <span>© KleenPark Auto Detailing</span>
+    <span id="footer-updated">Last updated: —</span>
+    <span>Auto-refreshes every 30 seconds</span>
+  </footer>
+
+  <!-- ══════════════════════════════════════════
+       ERROR OVERLAY
+  ══════════════════════════════════════════ -->
+  <div id="error-overlay" class="error-overlay hidden">
+    <div class="error-box">
+      <div class="error-icon">⚠</div>
+      <h3>Connection Error</h3>
+      <p id="error-message">Unable to connect to Google Sheets.</p>
+      <p class="error-hint">
+        Make sure the sheet is shared as <code>Anyone with the link</code>,
+        then open this dashboard via a local server (run <code>start.bat</code>).
+      </p>
+      <button class="error-btn" onclick="retryLoad()">Retry</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCRIPTS
+  ══════════════════════════════════════════ -->
+  <script src="config.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>
