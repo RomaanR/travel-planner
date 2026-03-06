@@ -21,15 +21,15 @@ export function ProgressBar({ currentStep, totalSteps }: ProgressBarProps) {
 
   return (
     <div className="w-full max-w-xl">
-      <div className="mb-3 flex justify-between text-xs text-muted-foreground">
+      <div className="mb-3 flex justify-between uppercase tracking-widest text-[9px] text-gray-500">
         {STEP_LABELS.map((label, i) => (
           <span
             key={label}
             className={`transition-colors duration-300 ${
               i === currentStep
-                ? "font-semibold text-primary"
+                ? "font-bold text-[#1A1A1A]"
                 : i < currentStep
-                  ? "text-primary/60"
+                  ? "text-[#1A1A1A]/60"
                   : ""
             }`}
           >
@@ -38,7 +38,7 @@ export function ProgressBar({ currentStep, totalSteps }: ProgressBarProps) {
         ))}
       </div>
       <Progress value={percentage} />
-      <p className="mt-3 text-center text-xs text-muted-foreground">
+      <p className="mt-3 text-center uppercase tracking-widest text-[9px] text-gray-500">
         Step {currentStep + 1} of {totalSteps}
       </p>
     </div>

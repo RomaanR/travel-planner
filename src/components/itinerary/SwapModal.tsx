@@ -110,10 +110,10 @@ export function SwapModal({
         {loading && (
           <div className="flex flex-col items-center justify-center py-8">
             <div className="relative h-10 w-10">
-              <div className="absolute inset-0 animate-spin rounded-full border-[3px] border-primary/20 border-t-primary" />
+              <div className="absolute inset-0 animate-spin rounded-full border-[3px] border-[#1A1A1A]/20 border-t-[#1A1A1A]" />
               <div className="absolute inset-0 animate-pulse-glow rounded-full" />
             </div>
-            <p className="mt-4 text-sm text-muted-foreground">
+            <p className="mt-4 text-sm text-gray-500">
               Finding alternatives...
             </p>
           </div>
@@ -135,14 +135,14 @@ export function SwapModal({
 
         {!loading && !error && alternatives.length > 0 && (
           <div className="space-y-3">
-            <p className="text-sm text-muted-foreground">
+            <p className="uppercase tracking-widest text-[10px] font-bold text-gray-500">
               Select a replacement:
             </p>
             {alternatives.map((alt, index) => (
               <Card
                 key={index}
-                className={`cursor-pointer transition-all duration-200 hover:shadow-apple hover:scale-[1.01] ${
-                  selectedAlt === index ? "ring-2 ring-primary bg-primary/5 shadow-apple" : ""
+                className={`cursor-pointer transition-all duration-200 hover:border-[#1A1A1A] ${
+                  selectedAlt === index ? "ring-2 ring-[#1A1A1A] bg-[#FAF7F2]" : ""
                 }`}
                 onClick={() => setSelectedAlt(index)}
               >
@@ -150,19 +150,19 @@ export function SwapModal({
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge variant="secondary">
                           {alt.category}
                         </Badge>
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-xs text-gray-500">
                           {alt.recommended_start_time} -{" "}
                           {alt.recommended_end_time}
                         </span>
                       </div>
-                      <h4 className="font-semibold text-sm">{alt.name}</h4>
-                      <p className="mt-1 text-xs text-muted-foreground line-clamp-2">
+                      <h4 className="font-serif text-sm">{alt.name}</h4>
+                      <p className="mt-1 text-xs text-gray-500 line-clamp-2">
                         {alt.description}
                       </p>
-                      <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
+                      <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-gray-500">
                         {alt.approximate_cost != null && (
                           <span>~{alt.approximate_cost} {alt.cost_currency}</span>
                         )}
@@ -180,7 +180,7 @@ export function SwapModal({
                     {selectedAlt === index && (
                       <div className="animate-scale-in">
                         <svg
-                          className="h-5 w-5 shrink-0 text-primary"
+                          className="h-5 w-5 shrink-0 text-[#1A1A1A]"
                           fill="currentColor"
                           viewBox="0 0 20 20"
                         >
@@ -200,7 +200,7 @@ export function SwapModal({
             <Button
               onClick={handleSwap}
               disabled={selectedAlt === null || swapping}
-              className="w-full h-11 text-base font-semibold"
+              className="w-full h-14 uppercase tracking-widest text-[10px] font-bold"
             >
               {swapping ? "Swapping..." : "Confirm Swap"}
             </Button>

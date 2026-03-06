@@ -23,7 +23,7 @@ export function LoadingScreen({ destination }: { destination?: string }) {
   }, []);
 
   return (
-    <div className="flex h-screen flex-col bg-background">
+    <div className="flex h-screen flex-col bg-[#FDFCFB]">
       {/* Skeleton header */}
       <header className="glass shrink-0">
         <div className="flex h-14 items-center justify-between px-4">
@@ -35,7 +35,7 @@ export function LoadingScreen({ destination }: { destination?: string }) {
               <Skeleton className="mt-1 h-3 w-24" />
             </div>
           </div>
-          <Skeleton className="h-8 w-24 rounded-xl" />
+          <Skeleton className="h-8 w-24 rounded-none" />
         </div>
       </header>
 
@@ -43,7 +43,7 @@ export function LoadingScreen({ destination }: { destination?: string }) {
         {/* Skeleton sidebar */}
         <aside className="hidden md:block w-48 border-r shrink-0 p-3 space-y-2">
           {[1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-16 w-full rounded-xl" />
+            <Skeleton key={i} className="h-16 w-full rounded-none" />
           ))}
         </aside>
 
@@ -53,18 +53,18 @@ export function LoadingScreen({ destination }: { destination?: string }) {
           <div className="px-6 pt-6 pb-2">
             <div className="flex flex-col items-center justify-center gap-4 py-8">
               <div className="relative h-12 w-12">
-                <div className="absolute inset-0 animate-spin rounded-full border-[3px] border-primary/20 border-t-primary" />
+                <div className="absolute inset-0 animate-spin rounded-full border-[3px] border-[#1A1A1A]/20 border-t-[#1A1A1A]" />
                 <div className="absolute inset-0 animate-pulse-glow rounded-full" />
               </div>
               <div className="text-center">
-                <h2 className="text-lg font-semibold">
+                <h2 className="font-serif italic text-xl tracking-tight text-[#1A1A1A]">
                   {destination
                     ? `Planning your trip to ${destination}`
                     : "Generating your itinerary"}
                 </h2>
                 <p
                   key={messageIndex}
-                  className="mt-2 text-sm text-muted-foreground animate-fade-in"
+                  className="mt-2 text-sm text-gray-500 animate-fade-in"
                 >
                   {MESSAGES[messageIndex]}
                 </p>
@@ -82,21 +82,21 @@ export function LoadingScreen({ destination }: { destination?: string }) {
                 </div>
                 <div className="flex-1 pb-4">
                   {i > 1 && (
-                    <Skeleton className="mb-2 h-3 w-40 rounded-full" />
+                    <Skeleton className="mb-2 h-3 w-40 rounded-none" />
                   )}
-                  <div className="flex rounded-2xl border overflow-hidden shadow-apple-sm">
+                  <div className="flex rounded-none border border-gray-200 overflow-hidden shadow-none">
                     <Skeleton className="w-24 sm:w-28 shrink-0 h-28" />
                     <div className="flex-1 p-3 space-y-2">
                       <div className="flex items-center gap-2">
-                        <Skeleton className="h-3 w-20 rounded-full" />
-                        <Skeleton className="h-5 w-14 rounded-full" />
+                        <Skeleton className="h-3 w-20 rounded-none" />
+                        <Skeleton className="h-5 w-14 rounded-none" />
                       </div>
                       <Skeleton className="h-4 w-3/4" />
                       <Skeleton className="h-3 w-full" />
                       <Skeleton className="h-3 w-2/3" />
                       <div className="flex gap-2">
-                        <Skeleton className="h-3 w-12 rounded-full" />
-                        <Skeleton className="h-3 w-16 rounded-full" />
+                        <Skeleton className="h-3 w-12 rounded-none" />
+                        <Skeleton className="h-3 w-16 rounded-none" />
                       </div>
                     </div>
                   </div>
